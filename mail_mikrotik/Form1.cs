@@ -27,42 +27,16 @@ namespace mail_mikrotik
         private void button1_Click(object sender, EventArgs e)
         {
             string path = @"e:\!email-mikrotik\";
-            using (Pop3 pop3 = new Pop3())
+            string path_m = @"E:\!Source\Repos\mail_mikrotik\console_mail2dir\mail2dir\bin\Debug\mail2dir.exe";
+            var startInfo = new System.Diagnostics.ProcessStartInfo
             {
-                pop3.Connect("pop.i.ua");       // or ConnectSSL for SSL
-                pop3.UseBestLogin("udp404@i.ua", "dtnjxrfcbhtyb500");
+                FileName = path_m,  // Путь к приложению
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            System.Diagnostics.Process.Start(startInfo);
 
-                foreach (string uid in pop3.GetAll())
-                {
-                    IMail email = new MailBuilder()
-                        .CreateFromEml(pop3.GetMessageByUID(uid));
-                    //бесплатная библиотека мусорит сабжект письма
-                    // - приговор: Не использовать "Тему"
-                    string subj = email.Subject.Replace(@"Please purchase Mail.dll license at https://www.limilabs.com/mail", "");
-                    if (subj == "") subj = "subject";
-                    textBox1.Text+= subj+Environment.NewLine;
-                    // email.Text.Replace("/","-");
-                    string filenam;
-                    filenam = @email.Text.Replace("/", "-");
-                    filenam = email.Text.Replace("\r\n", "");
-                    textBox2.Text += filenam;
-                    
 
-                    // email.Save(@"e:\1111qa");
-                    foreach (MimeData mime in email.Attachments)
-                    {
-                          mime.Save(path+mime.SafeFileName);
-                     //   mime.Save(path + filenam+".txt");
-                    }
-                }
-                //удаляем сообщения с сервера
-                foreach (string uid in pop3.GetAll())
-            {
-                //pop3.DeleteMessageByUID(uid);
-            }
-
-                pop3.Close();
-            }
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)

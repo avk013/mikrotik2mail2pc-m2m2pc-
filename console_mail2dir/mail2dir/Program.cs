@@ -13,8 +13,7 @@ namespace mail2dir
         {
             var startInfo = new System.Diagnostics.ProcessStartInfo
             {
-                //FileName = @"E:\!Source\Repos\mail_mikrotik\console_mail2dir\mail2dir\bin\Debug\mail2dir.exe",  // Путь к приложению
-                FileName = @"E:\!Source\Repos\mail_mikrotik\console_mail2dir\mail2dirr\mail2dirr\bin\Debug\mail2dirr.exe /dir E:\!email-mikrotik",  // Путь к приложению
+                FileName = @"E:\!Source\Repos\mail_mikrotik\console_mail2dir\mail2dir\bin\Debug\mail2dir.exe",  // Путь к приложению
                 //UseShellExecute = false,
                 //CreateNoWindow = true
             };
