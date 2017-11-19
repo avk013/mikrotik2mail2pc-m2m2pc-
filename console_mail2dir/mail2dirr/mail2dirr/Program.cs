@@ -20,23 +20,23 @@ namespace mail2dirr
         {
             string[] arg;
             arg = System.Environment.GetCommandLineArgs();
-            string path="";
+            string path=@"e:\!email-mikrotik\";
             for (int i = 0; i < arg.Length; i++)
             {
                 if (arg[i] == "/dir")
                     if (!String.IsNullOrEmpty(arg[i + 1]))
                         path = arg[i + 1];
-                       }
-            if (path == "")              
+
+if (arg[i] == "/?")              
 {Console.WriteLine("");              
-Console.WriteLine("Использование: mail2dirr.exe /dir \"argument 1\" ");
-                path = @"e:\!email-mikrotik\";
+Console.WriteLine("Использование: mail2dirr.exe /dir \"папка для вложений\" ");
+                
                 return;}
-
-
+                       }
+            
             //string path_base = @"e:\!email-mikrotik\";
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-
+            if (path.Substring(path.Length - 1) != @"\") path += @"\";
                 using (Pop3 pop3 = new Pop3())
             {
                 pop3.Connect("pop.i.ua");       // or ConnectSSL for SSL

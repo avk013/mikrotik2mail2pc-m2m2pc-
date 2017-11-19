@@ -7,13 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Limilabs.Client.IMAP;
-using Limilabs.Client.POP3;
-using Limilabs.Client.SMTP;
-using Limilabs.Mail;
-using Limilabs.Mail.MIME;
-using Limilabs.Mail.Fluent;
-using Limilabs.Mail.Headers;
+using System.IO;
 
 namespace mail_mikrotik
 {
@@ -25,17 +19,14 @@ namespace mail_mikrotik
         }
 
         private void button1_Click(object sender, EventArgs e)
-        {
-            string path = @"e:\!email-mikrotik\";
-            string path_m = @"E:\!Source\Repos\mail_mikrotik\console_mail2dir\mail2dir\bin\Debug\mail2dir.exe";
-            var startInfo = new System.Diagnostics.ProcessStartInfo
-            {
-                FileName = path_m,  // Путь к приложению
+        {         
+            string path_m = @"E:\!Source\Repos\mail_mikrotik\console_mail2dir\mail2dirr\mail2dirr\bin\Debug\mail2dirr.exe";
+            if(File.Exists(path_m))
+            { var startInfo = new System.Diagnostics.ProcessStartInfo
+            {   FileName = path_m,  // Путь к приложению
                 UseShellExecute = false,
-                CreateNoWindow = true
-            };
-            System.Diagnostics.Process.Start(startInfo);
-
+                CreateNoWindow = true};
+            System.Diagnostics.Process.Start(startInfo);}
 
         }
 

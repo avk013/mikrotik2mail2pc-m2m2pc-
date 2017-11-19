@@ -1,26 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.IO;
+using System.Windows.Forms;
 
-namespace mail2dir
+namespace mail_mikrotik
 {
-    class Program
+    static class Program
     {
-        static void Main(string[] args)
+        /// <summary>
+        /// Главная точка входа для приложения.
+        /// </summary>
+        [STAThread]
+        static void Main()
         {
-            var startInfo = new System.Diagnostics.ProcessStartInfo
-            {
-                //FileName = @"E:\!Source\Repos\mail_mikrotik\console_mail2dir\mail2dir\bin\Debug\mail2dir.exe",  // Путь к приложению
-                FileName = @"E:\!Source\Repos\mail_mikrotik\console_mail2dir\mail2dirr\mail2dirr\bin\Debug\mail2dirr.exe /dir E:\!email-mikrotik",  // Путь к приложению
-                //UseShellExecute = false,
-                //CreateNoWindow = true
-            };
-
-            System.Diagnostics.Process.Start(startInfo);
-
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Form1());
         }
     }
 }
