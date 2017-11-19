@@ -41,11 +41,26 @@ namespace mail_mikrotik
                     string subj = email.Subject.Replace(@"Please purchase Mail.dll license at https://www.limilabs.com/mail", "");
                     if (subj == "") subj = "subject";
                     textBox1.Text+= subj+Environment.NewLine;
-                    textBox2.Text+= email.Text;
-                   // email.Save(@"e:\1111qa");
-                    foreach(MimeData mime in email.Attachments)
-                    { mime.Save(path+mime.SafeFileName); }
+                    // email.Text.Replace("/","-");
+                    string filenam;
+                    filenam = @email.Text.Replace("/", "-");
+                    filenam = email.Text.Replace("\r\n", "");
+                    textBox2.Text += filenam;
+                    
+
+                    // email.Save(@"e:\1111qa");
+                    foreach (MimeData mime in email.Attachments)
+                    {
+                          mime.Save(path+mime.SafeFileName);
+                     //   mime.Save(path + filenam+".txt");
+                    }
                 }
+                //удаляем сообщения с сервера
+                foreach (string uid in pop3.GetAll())
+            {
+                //pop3.DeleteMessageByUID(uid);
+            }
+
                 pop3.Close();
             }
         }

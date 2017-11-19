@@ -1,0 +1,7 @@
+global a [/sys clock get time]
+global b [/sys clock get date]
+global f ($a.".txt")
+global cmd "/interface ethernet print stats"
+execute file=$f  script=$cmd
+delay 10
+/tool e-mail send to="udp404@i.ua" subject=$a body=$b file=$f 
