@@ -1,0 +1,13 @@
+global nm mikro
+global a [/sys clock get time]
+global b [/sys clock get date]
+:local upTime [/system resource get uptime]
+global d [([:pick $b 4 6]."-".[:pick $b 0 3]."-".[:pick $b 7 11])]
+global t [([:pick $a 0 2]."-".[:pick $a 3 5])]
+global f ($nm."_".$d."_".$t."_".$upTime.".txt")
+global cmd "/interface ethernet print stats"
+execute file=$f  script=$cmd
+delay 10
+/tool e-mail send to="udp404@i.ua" subject=$a body=($b."_".$a."_".$upTime) file=$f 
+:delay 10
+/file remove [/file find where type=".txt file"]
