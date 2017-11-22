@@ -76,16 +76,57 @@ namespace mail_mikrotik
                 tab0Values = files[i].Name.Split('_');
                 dr = dt.NewRow();
                 for (int ii = 0; ii < 6; ii++) { dr[ii] = tab0Values[ii]; }
+                //считываем содержимое файла
+                // name: 
+                // driver-rx-byte:
+                // tx-bytes:
+                string[] readText = File.ReadAllLines(path_log+ files[i].Name);
+                for(int ii=0;ii<readText.Length;ii++)
+                { if(readText[ii].IndexOf("name:") >0) dr[6] = readText[ii];
+                  if (readText[ii].IndexOf("driver-rx-byte:") > 0) dr[7] = readText[ii];
+                  if (readText[ii].IndexOf("tx-bytes:") > 0) dr[8] = readText[ii];
+                }
+
+
                 dt.Rows.Add(dr);
             }
             dataGridView1.DataSource = dt;
+            string dates = DateTime.Now.ToString();
+            
+            dates=dates.Replace(" ","_");
+            dates = dates.Replace(":", "-");
+            dates = dates.Replace(".", "_");
+           label4.Text = dates;
+             dt.WriteXml(path_log +@"out\"+dates+@"out.xml");
             // ищем уникальніе имена
+            //! подумать если пусто!!!!
             string name_u=dt.Rows[0][0].ToString(),name_old = "";
             for(int i=0;i<dt.Rows.Count;i++)
             {
                 name_u = dt.Rows[i][0].ToString();
                 if (name_u != name_old)
-                { name_old = name_u; label3.Text += name_old;}
+                { name_old = name_u; label3.Text += name_old;
+                    //кидаем в соотвующую дирректорию
+                    /////////////////////
+                    //откуда копируем
+                    string Dir1 = path_log;
+                    //куда копируем
+                    string Dir2 = path_log+@"\"+name_old;
+                    if (!Directory.Exists(Dir2)) Directory.CreateDirectory(Dir2);
+                    try
+                    {
+                        DirectoryInfo dirInfo = new DirectoryInfo(Dir1);
+                        foreach (FileInfo file in dirInfo.GetFiles(name_old+"*.txt"))
+                        {
+                            File.Move(file.FullName, Dir2 + "\\" + file.Name);
+                        }
+                    }
+                    catch (Exception ex)
+                    {MessageBox.Show(ex.Message);}
+
+
+                    /////////////
+                }
             }
             // label1.Text = files[0].Name;
         }
