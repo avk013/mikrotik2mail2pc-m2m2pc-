@@ -18,6 +18,24 @@ namespace mail_mikrotik
         {
             InitializeComponent();
         }
+        public void move2path(string name_old,string path)
+        {    //откуда копируем
+            string Dir1 = path_log;
+            //куда копируем
+            string Dir2 = path_log + @"\" + name_old;
+            if (!Directory.Exists(Dir2)) Directory.CreateDirectory(Dir2);
+            try
+            {
+                DirectoryInfo dirInfo = new DirectoryInfo(Dir1);
+                foreach (FileInfo file in dirInfo.GetFiles(name_old + "*.txt"))
+                {
+                    File.Move(file.FullName, Dir2 + "\\" + file.Name);
+                }
+            }
+            catch (Exception ex)
+            { MessageBox.Show(ex.Message); }
+        }
+    
 
         private void button1_Click(object sender, EventArgs e)
         {         
@@ -91,16 +109,14 @@ namespace mail_mikrotik
                 dt.Rows.Add(dr);
             }
             dataGridView1.DataSource = dt;
-            string dates = DateTime.Now.ToString();
-            
-            dates=dates.Replace(" ","_");
-            dates = dates.Replace(":", "-");
-            dates = dates.Replace(".", "_");
-           label4.Text = dates;
-             dt.WriteXml(path_log +@"out\"+dates+@"out.xml");
-            // ищем уникальніе имена
-            //! подумать если пусто!!!!
-            string name_u=dt.Rows[0][0].ToString(),name_old = "";
+            // подумать если пусто
+            if(dt.Rows.Count>0)
+{//записываем текущие данные
+string dates = DateTime.Now.ToString();
+dates = dates.Replace(" ", "_");dates = dates.Replace(":", "-");dates = dates.Replace(".", "_");
+label4.Text = dates; dt.WriteXml(path_log + @"out\" + dates + @"out.xml");
+                // ищем уникальніе имена
+                string name_u =dt.Rows[0][0].ToString(),name_old = "";
             for(int i=0;i<dt.Rows.Count;i++)
             {
                 name_u = dt.Rows[i][0].ToString();
@@ -123,7 +139,7 @@ namespace mail_mikrotik
                     }
                     catch (Exception ex)
                     {MessageBox.Show(ex.Message);}
-
+                    }
 
                     /////////////
                 }
@@ -131,5 +147,22 @@ namespace mail_mikrotik
             // label1.Text = files[0].Name;
         }
 
+        private void button5_Click(object sender, EventArgs e)
+        {//animation
+            timer1.Enabled = true;
+            // wait file "mail_OK"
+            timer2.Enabled = true;
+        }
+        string zagruz = "загрузка................загрузка............загрузка......",za;
+        int i = 0;
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            za = zagruz.Substring(i++, 20);
+            //if (flag == 1) i++; else i--;
+            if (i == 24) i=0;
+            //if (i == 0) flag = 1;
+            label3.Text= za;
+            //if (label3.Text.Length > 32) label3.Text = "загрузка";
+        }
     }
 }
