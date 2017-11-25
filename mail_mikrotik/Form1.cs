@@ -11,45 +11,42 @@ using System.IO;
 
 namespace mail_mikrotik
 {
-    public partial class Form1 : Form
+public partial class Form1 : Form
     {
         string path_log = @"E:\!email-mikrotik\";
-        public Form1()
+public Form1()
         {
             InitializeComponent();
         }
-        public void move2path(string name_old,string path)
+        // перенос файлов из одного каталога в другой
+public void move2path(string @name_old,string @path)
         {    //откуда копируем
-            string Dir1 = path_log;
+            string Dir1 = @path;
             //куда копируем
-            string Dir2 = path_log + @"\" + name_old;
+            string Dir2 = @path + @"\" + @name_old;
             if (!Directory.Exists(Dir2)) Directory.CreateDirectory(Dir2);
-            try
-            {
-                DirectoryInfo dirInfo = new DirectoryInfo(Dir1);
-                foreach (FileInfo file in dirInfo.GetFiles(name_old + "*.txt"))
-                {
-                    File.Move(file.FullName, Dir2 + "\\" + file.Name);
-                }
-            }
-            catch (Exception ex)
-            { MessageBox.Show(ex.Message); }
+               try
+              {
+                  DirectoryInfo dirInfo = new DirectoryInfo(Dir1);
+                  foreach (FileInfo file in dirInfo.GetFiles(name_old + "*.txt"))
+                  {File.Move(file.FullName, @Dir2 + @"\" + file.Name);}
+              }
+              catch (Exception ex)
+              { MessageBox.Show(ex.Message+Environment.NewLine); }
         }
-    
-
-        private void button1_Click(object sender, EventArgs e)
+private void button1_Click(object sender, EventArgs e)
         {         
             string path_m = @"E:\!Source\Repos\mail_mikrotik\console_mail2dir\mail2dirr\mail2dirr\bin\Debug\mail2dirr.exe";
-            if(File.Exists(path_m))
+            if(File.Exists(path_m)) //запускаем клиента получения вложений почты
             { var startInfo = new System.Diagnostics.ProcessStartInfo
             { FileName = path_m,// + @" /dir "+@path_log,  // Путь к приложению
             Arguments= @" /dir " + @path_log,
-                UseShellExecute = false,
-                CreateNoWindow = true};
+            UseShellExecute = false, CreateNoWindow = true};
             System.Diagnostics.Process.Start(startInfo);
-                label2.Text = DateTime.Now.ToString()+"_OK";
-            }
-
+                // label2.Text = DateTime.Now.ToString()+"_OK";
+            }           
+            timer1.Enabled = true;//animation
+            timer2.Enabled = true;// wait file "mail_OK"
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -94,75 +91,81 @@ namespace mail_mikrotik
                 tab0Values = files[i].Name.Split('_');
                 dr = dt.NewRow();
                 for (int ii = 0; ii < 6; ii++) { dr[ii] = tab0Values[ii]; }
-                //считываем содержимое файла
-                // name: 
-                // driver-rx-byte:
-                // tx-bytes:
+                //считываем содержимое файла              
+                /* формат файла
+                 Flags: D - dynamic, X - disabled, R - running, S - slave 
+                 #     NAME               RX-BYTE           TX-BYTE     RX-PACKET     TX-PACKET
+                 0  R  Lan         71 292 359 093 1 034 318 413 528   322 675 085   780 861 923
+                 1  R  Sky      1 064 572 143 276    83 572 080 930   786 977 972   327 838 501
+                 2  X  ether3                   0                 0             0             0
+                 3  X  ether4                   0                 0             0             0
+                 4  X  globa...                 0                 0             0             0
+                 5  X  globa...                 0                 0             0             0
+                 6  R  pptp-... 1 020 807 199 464    63 961 725 927   784 864 546   327 233 856
+                 идея два пробела меняем на знак подчеркивания, 
+                 1. разделить на столбцы, понятно что столбец 4-5-3-7 заканчивается 
+                 на количество символов, равное на заголовок 2-й строки
+                 #     NAME               RX-BYTE           TX-BYTE     RX-PACKET     TX-PACKET
+                фиксированная ширина поля 
+                2 6 14 34 52 66 80
+                 *///
                 string[] readText = File.ReadAllLines(path_log+ files[i].Name);
                 for(int ii=0;ii<readText.Length;ii++)
                 { if(readText[ii].IndexOf("name:") >0) dr[6] = readText[ii];
                   if (readText[ii].IndexOf("driver-rx-byte:") > 0) dr[7] = readText[ii];
                   if (readText[ii].IndexOf("tx-bytes:") > 0) dr[8] = readText[ii];
-                }
-
-
-                dt.Rows.Add(dr);
-            }
-            dataGridView1.DataSource = dt;
-            // подумать если пусто
-            if(dt.Rows.Count>0)
-{//записываем текущие данные
-string dates = DateTime.Now.ToString();
-dates = dates.Replace(" ", "_");dates = dates.Replace(":", "-");dates = dates.Replace(".", "_");
-label4.Text = dates; dt.WriteXml(path_log + @"out\" + dates + @"out.xml");
+                 }
+                 dt.Rows.Add(dr);}
+                 dataGridView1.DataSource = dt;
+                 // подумать если пусто
+                 if(dt.Rows.Count>0)
+                {//записываем текущие данные
+                string dates = DateTime.Now.ToString();
+                dates = dates.Replace(" ", "_");dates = dates.Replace(":", "-");dates = dates.Replace(".", "_");
+                label4.Text = dates; dt.WriteXml(path_log + @"out\" + dates + @"out.xml");
                 // ищем уникальніе имена
                 string name_u =dt.Rows[0][0].ToString(),name_old = "";
-            for(int i=0;i<dt.Rows.Count;i++)
-            {
-                name_u = dt.Rows[i][0].ToString();
-                if (name_u != name_old)
-                { name_old = name_u; label3.Text += name_old;
-                    //кидаем в соотвующую дирректорию
-                    /////////////////////
-                    //откуда копируем
-                    string Dir1 = path_log;
-                    //куда копируем
-                    string Dir2 = path_log+@"\"+name_old;
-                    if (!Directory.Exists(Dir2)) Directory.CreateDirectory(Dir2);
-                    try
-                    {
-                        DirectoryInfo dirInfo = new DirectoryInfo(Dir1);
-                        foreach (FileInfo file in dirInfo.GetFiles(name_old+"*.txt"))
+                for(int i=0;i<dt.Rows.Count;i++)
+                 {name_u = dt.Rows[i][0].ToString();
+                  if (name_u != name_old)
+                  { name_old = name_u;
+                        //label3.Text += name_old;
+                        //кидаем в соотвующую дирректорию
+                        /////////////////////
+                        //откуда копируем
+                        move2path(name_old, path_log);
+                      }
+
+            /////////////
+        }}}
+
+                        private void button5_Click(object sender, EventArgs e)
                         {
-                            File.Move(file.FullName, Dir2 + "\\" + file.Name);
+                        }
+                        //string zagruz = "загрузка................загрузка............загрузка......",za;
+                        string zagruz = "загрузка................загрузка............", za;
+                        int i = 0;
+
+                        private void timer2_Tick(object sender, EventArgs e)
+                        {
+                            string path_f = path_log+"ok.ok";
+                            if (File.Exists(path_f))
+                            {
+                                File.Delete(path_f);
+                                timer1.Enabled = false;
+                                timer2.Enabled = false;
+                                label3.Text = "Данные принято от_" + DateTime.Now.ToString();
+                            }
+                        }
+
+                        private void timer1_Tick(object sender, EventArgs e)
+                        {
+                            za = zagruz.Substring(i++, 20);
+                            //if (flag == 1) i++; else i--;
+                            if (i == 24) i=0;
+                            //if (i == 0) flag = 1;
+                            label3.Text= za;
+                            //if (label3.Text.Length > 32) label3.Text = "загрузка";
                         }
                     }
-                    catch (Exception ex)
-                    {MessageBox.Show(ex.Message);}
-                    }
-
-                    /////////////
                 }
-            }
-            // label1.Text = files[0].Name;
-        }
-
-        private void button5_Click(object sender, EventArgs e)
-        {//animation
-            timer1.Enabled = true;
-            // wait file "mail_OK"
-            timer2.Enabled = true;
-        }
-        string zagruz = "загрузка................загрузка............загрузка......",za;
-        int i = 0;
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            za = zagruz.Substring(i++, 20);
-            //if (flag == 1) i++; else i--;
-            if (i == 24) i=0;
-            //if (i == 0) flag = 1;
-            label3.Text= za;
-            //if (label3.Text.Length > 32) label3.Text = "загрузка";
-        }
-    }
-}

@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Limilabs.Client.IMAP;
 using Limilabs.Client.POP3;
-using Limilabs.Client.SMTP;
 using Limilabs.Mail;
 using Limilabs.Mail.MIME;
-using Limilabs.Mail.Fluent;
-using Limilabs.Mail.Headers;
 using System.IO;
-
+//получение писем логов микротика с почтового сервера по попу
 namespace mail2dirr
 {
     class Program
@@ -20,22 +12,22 @@ namespace mail2dirr
         {
             string[] arg;
             arg = System.Environment.GetCommandLineArgs();
+            //если не будет аргумента то запись вложений в папку...
             string path=@"e:\!email-mikrotik\";
             for (int i = 0; i < arg.Length; i++)
             {
                 if (arg[i] == "/dir")
                     if (!String.IsNullOrEmpty(arg[i + 1]))
                         path = arg[i + 1];
-
+//если запускают с вопросом утилиту....
 if (arg[i] == "/?")              
 {Console.WriteLine("");              
 Console.WriteLine("Использование: mail2dirr.exe /dir \"папка для вложений\" ");
-                
-                return;}
-                       }
+                return;}}
             
             //string path_base = @"e:\!email-mikrotik\";
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+            //если каталог указан без слеша, дописываем его
             if (path.Substring(path.Length - 1) != @"\") path += @"\";
                 using (Pop3 pop3 = new Pop3())
             {
@@ -65,6 +57,9 @@ Console.WriteLine("Использование: mail2dirr.exe /dir \"папка �
 
                 pop3.Close();
             }
+            //ставим знак окончания приема писем
+            path+= "ok.ok";
+            if (!File.Exists(path)) File.Create(path);
         }
     }
 }
