@@ -32,7 +32,7 @@ Console.WriteLine("Использование: mail2dirr.exe /dir \"папка �
                 using (Pop3 pop3 = new Pop3())
             {
                 pop3.Connect("pop.i.ua");       // or ConnectSSL for SSL
-                pop3.UseBestLogin("udp404@i.ua", "dtnjxrfcbhtyb500");
+                pop3.UseBestLogin("udp@i.ua", "dtnjxrfcbhtyb");
 
                 foreach (string uid in pop3.GetAll())
                 {
