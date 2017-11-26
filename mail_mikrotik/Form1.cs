@@ -14,7 +14,9 @@ namespace mail_mikrotik
 public partial class Form1 : Form
     {
         string path_log = @"E:\!email-mikrotik\";
-public Form1()
+        string path_log_out = @"E:\!email-mikrotik\!!!out\";
+        string path_conf_file = @"E:\!email-mikrotik\!!!out\hosts.conf";
+        public Form1()
         {
             InitializeComponent();
         }
@@ -122,7 +124,8 @@ private void button1_Click(object sender, EventArgs e)
                 {//записываем текущие данные
                 string dates = DateTime.Now.ToString();
                 dates = dates.Replace(" ", "_");dates = dates.Replace(":", "-");dates = dates.Replace(".", "_");
-                label4.Text = dates; dt.WriteXml(path_log + @"out\" + dates + @"out.xml");
+                if (!Directory.Exists(@path_log_out)) Directory.CreateDirectory(@path_log_out);
+                label4.Text = dates; dt.WriteXml(@path_log_out + dates + @"out.xml");
                 // ищем уникальніе имена
                 string name_u =dt.Rows[0][0].ToString(),name_old = "";
                 for(int i=0;i<dt.Rows.Count;i++)
@@ -135,7 +138,6 @@ private void button1_Click(object sender, EventArgs e)
                         //откуда копируем
                         move2path(name_old, path_log);
                       }
-
             /////////////
         }}}
 
@@ -158,7 +160,40 @@ private void button1_Click(object sender, EventArgs e)
                             }
                         }
 
-                        private void timer1_Tick(object sender, EventArgs e)
+        private void button6_Click(object sender, EventArgs e)
+        {
+
+            System.IO.DirectoryInfo info = new System.IO.DirectoryInfo(@path_log);
+            System.IO.DirectoryInfo[] dirs = info.GetDirectories();
+            //формируем таблицу для ссотвевий
+            DataTable dt = new DataTable("tab0");
+            int st = 0;
+            //dt.Clear();
+            //dt = new DataTable("tab0");
+            DataColumn a0 = new DataColumn(st++.ToString(), typeof(String));
+            DataColumn a1 = new DataColumn(st++.ToString(), typeof(String));
+            DataColumn a2 = new DataColumn(st++.ToString(), typeof(String));         
+            dt.Columns.AddRange(new DataColumn[] { a0, a1, a2});
+            string[] tab0Values = null;
+            DataRow dr = null;
+            //   не работает...
+            for (int i = 1; i < dirs.Length; i++)
+            {
+                //tab0Values[0] = dirs[i].Name;
+                dr = dt.NewRow();
+                dr[0] = dirs[i].Name;
+                dt.Rows.Add(dr);
+            }
+            dataGridView2.DataSource = dt;
+            // + Environment.NewLine;
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            if (!File.Exists(path_conf_file)) File.Create(path_conf_file);
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
                         {
                             za = zagruz.Substring(i++, 20);
                             //if (flag == 1) i++; else i--;
