@@ -113,9 +113,16 @@ private void button1_Click(object sender, EventArgs e)
                  *///
                 string[] readText = File.ReadAllLines(path_log+ files[i].Name);
                 for(int ii=0;ii<readText.Length;ii++)
-                { if(readText[ii].IndexOf("name:") >0) dr[6] = readText[ii];
-                  if (readText[ii].IndexOf("driver-rx-byte:") > 0) dr[7] = readText[ii];
-                  if (readText[ii].IndexOf("tx-bytes:") > 0) dr[8] = readText[ii];
+                {// ищем строку с номером интерфейса из конфига и считываем поле 34 и 52
+   //!!! no working
+                    int j;
+                 //   for (j = 0; j < dataGridView2.RowCount; j++)
+                   //     if ((dataGridView2.Rows[1].Cells[j].ToString() == readText[0])
+                     //       && (dataGridView2.Rows[1].Cells[j].ToString()==readText[0])
+                       //     ) dr[6] = dataGridView2.Rows[1].Cells[j].ToString().Substring(14,20);
+                  //  if (readText[ii].IndexOf("name:") >0) dr[6] = readText[ii];
+                  //if (readText[ii].IndexOf("driver-rx-byte:") > 0) dr[7] = readText[ii];
+                  //if (readText[ii].IndexOf("tx-bytes:") > 0) dr[8] = readText[ii];
                  }
                  dt.Rows.Add(dr);}
                  dataGridView1.DataSource = dt;
@@ -162,7 +169,7 @@ private void button1_Click(object sender, EventArgs e)
 
         private void button6_Click(object sender, EventArgs e)
         {
-
+            dataGridView1.Columns.Clear();
             System.IO.DirectoryInfo info = new System.IO.DirectoryInfo(@path_log);
             System.IO.DirectoryInfo[] dirs = info.GetDirectories();
             //формируем таблицу для ссотвевий
@@ -171,26 +178,39 @@ private void button1_Click(object sender, EventArgs e)
             //dt.Clear();
             //dt = new DataTable("tab0");
             DataColumn a0 = new DataColumn(st++.ToString(), typeof(String));
+            a0.ColumnName = "хост";
             DataColumn a1 = new DataColumn(st++.ToString(), typeof(String));
+            a1.ColumnName = "интерфейс";
             DataColumn a2 = new DataColumn(st++.ToString(), typeof(String));         
             dt.Columns.AddRange(new DataColumn[] { a0, a1, a2});
             string[] tab0Values = null;
             DataRow dr = null;
             //   не работает...
+
             for (int i = 1; i < dirs.Length; i++)
             {
                 //tab0Values[0] = dirs[i].Name;
                 dr = dt.NewRow();
                 dr[0] = dirs[i].Name;
+                //ищкем в конфиге это имя, и добавляем в таблицу параметр для него
+                // а е сли не пришло сообщения?!"?
+                //думем....
+
+
                 dt.Rows.Add(dr);
             }
-            dataGridView2.DataSource = dt;
+           dataGridView2.DataSource = dt;
+            writeCSV(dataGridView2, path_conf_file);
             // + Environment.NewLine;
+            // считываем файл !!!!!! пока не рабоает...
+            
+            
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            if (!File.Exists(path_conf_file)) File.Create(path_conf_file);
+            
+            init_config(dataGridView2);
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -202,5 +222,109 @@ private void button1_Click(object sender, EventArgs e)
                             label3.Text= za;
                             //if (label3.Text.Length > 32) label3.Text = "загрузка";
                         }
+        public void init_config(DataGridView gridIn)
+        {
+            if (!File.Exists(path_conf_file)) File.Create(path_conf_file);          
+            FileInfo f = new FileInfo(path_conf_file);
+            if (f.Length > 1)
+            {   //описываем виртуальную таблицу 
+                DataTable dt2 = new DataTable("конфиг сбора данных");
+                DataColumn a02 = new DataColumn("хост", typeof(String));
+                DataColumn a12 = new DataColumn("номер интерфейса", typeof(String));
+                DataColumn a22 = new DataColumn("примечание", typeof(String));
+                dt2.Columns.AddRange(new DataColumn[] { a02, a12, a22 });
+                string[] tab0 = File.ReadAllLines(path_conf_file, Encoding.UTF8);
+                string[] tab1Values = null;
+                DataRow dr1 = null;
+                //помещаем файл в виртуальную таблицу
+                for (int i = 0; i < tab0.Length; i++)
+                {
+                    if (!String.IsNullOrEmpty(tab0[i]))
+                    {
+                        tab1Values = tab0[i].Split(',');
+                        //создаём новую строку
+                        dr1 = dt2.NewRow();
+                        //j должно быть колыо строк!!!
+                        for (int j = 0; j < tab1Values.Length; j++)
+                        {
+                            string valp = tab1Values[j];
+                            dr1[j] = valp;
+                        }
+                        dt2.Rows.Add(dr1);
                     }
+                }
+                gridIn.DataSource = dt2;
+            }
+
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dataGridView2_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            writeCSV(dataGridView2, path_conf_file);
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {//ищем в конфиге хосты их списка полученных файлов, 
+         //и если не находим, добавляем в конфиг
+
+
+
+
+
+        }
+
+        public void writeCSV(DataGridView gridIn, string outputFile)
+        {
+            //test to see if the DataGridView has any rows
+            if (gridIn.RowCount > 0)
+            {
+                string value = "";
+                DataGridViewRow dr = new DataGridViewRow();
+                StreamWriter swOut = new StreamWriter(outputFile);
+
+                //write header rows to csv
+                /*    for (int i = 0; i <= gridIn.Columns.Count - 1; i++)
+                    {
+                        if (i > 0)
+                        {
+                            swOut.Write(",");
+                        }
+                        swOut.Write(gridIn.Columns[i].HeaderText);
+                    }
+                    swOut.WriteLine();
+    */
+                //write DataGridView rows to csv
+                for (int j = 0; j <= gridIn.Rows.Count - 1; j++)
+                {
+                    if (j > 0)
+                    {
+                        swOut.WriteLine();
+                    }
+
+                    dr = gridIn.Rows[j];
+
+                    for (int i = 0; i <= gridIn.Columns.Count-1 ; i++)
+                    {
+                        if (i > 0){swOut.Write(","); }
+
+                        //value = dr.Cells[i].Value.ToString();
+                        //value = dr.Cells[i].ToString();
+                        value = dr.Cells[i].Value.ToString();
+                        //replace comma's with spaces
+                        value = value.Replace(',', ' ');
+                        //replace embedded newlines with spaces
+                        value = value.Replace(Environment.NewLine, " ");
+
+                        swOut.Write(value);
+                    }
+                }
+                swOut.Close();
+            }
+        }
+    }
                 }
