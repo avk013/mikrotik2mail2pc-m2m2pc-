@@ -45,18 +45,18 @@
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.button8 = new System.Windows.Forms.Button();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
-            this.button6 = new System.Windows.Forms.Button();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.button7 = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.timer2 = new System.Windows.Forms.Timer(this.components);
-            this.button8 = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -226,7 +226,6 @@
             // 
             this.tabPage4.Controls.Add(this.button8);
             this.tabPage4.Controls.Add(this.dataGridView2);
-            this.tabPage4.Controls.Add(this.button6);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
@@ -234,6 +233,16 @@
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "настройки";
             this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(0, 208);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(408, 27);
+            this.button8.TabIndex = 4;
+            this.button8.Text = "добавить в список новые хосты";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
             // dataGridView2
             // 
@@ -243,7 +252,7 @@
             this.dataGridView2.ContextMenuStrip = this.contextMenuStrip1;
             this.dataGridView2.Location = new System.Drawing.Point(3, 3);
             this.dataGridView2.Name = "dataGridView2";
-            this.dataGridView2.Size = new System.Drawing.Size(396, 182);
+            this.dataGridView2.Size = new System.Drawing.Size(396, 199);
             this.dataGridView2.TabIndex = 3;
             this.dataGridView2.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellEndEdit);
             // 
@@ -274,16 +283,6 @@
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
             this.toolStripMenuItem4.Size = new System.Drawing.Size(92, 22);
             this.toolStripMenuItem4.Text = "345";
-            // 
-            // button6
-            // 
-            this.button6.Location = new System.Drawing.Point(10, 208);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(379, 21);
-            this.button6.TabIndex = 1;
-            this.button6.Text = "счит.имена хостов из файлов не нажимать...сотрется конфиг";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // tabPage5
             // 
@@ -323,21 +322,21 @@
             this.timer2.Interval = 700;
             this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
             // 
-            // button8
+            // label5
             // 
-            this.button8.Location = new System.Drawing.Point(58, 181);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(239, 27);
-            this.button8.TabIndex = 4;
-            this.button8.Text = "добавить в список новые хосты";
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(452, 31);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(35, 13);
+            this.label5.TabIndex = 4;
+            this.label5.Text = "label5";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(703, 421);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.textBox2);
@@ -381,7 +380,6 @@
         private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.TabPage tabPage5;
-        private System.Windows.Forms.Button button6;
         private System.Windows.Forms.DataGridView dataGridView2;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
@@ -389,6 +387,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Label label5;
     }
 }
 

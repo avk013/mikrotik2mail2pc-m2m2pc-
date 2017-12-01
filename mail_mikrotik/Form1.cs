@@ -222,13 +222,14 @@ private void button1_Click(object sender, EventArgs e)
                             label3.Text= za;
                             //if (label3.Text.Length > 32) label3.Text = "загрузка";
                         }
+        public DataTable dt2 = new DataTable("конфиг сбора данных");
         public void init_config(DataGridView gridIn)
         {
             if (!File.Exists(path_conf_file)) File.Create(path_conf_file);          
             FileInfo f = new FileInfo(path_conf_file);
             if (f.Length > 1)
             {   //описываем виртуальную таблицу 
-                DataTable dt2 = new DataTable("конфиг сбора данных");
+              
                 DataColumn a02 = new DataColumn("хост", typeof(String));
                 DataColumn a12 = new DataColumn("номер интерфейса", typeof(String));
                 DataColumn a22 = new DataColumn("примечание", typeof(String));
@@ -271,13 +272,21 @@ private void button1_Click(object sender, EventArgs e)
         private void button8_Click(object sender, EventArgs e)
         {//ищем в конфиге хосты их списка полученных файлов, 
          //и если не находим, добавляем в конфиг
-
-
-
-
-
+            System.IO.DirectoryInfo info = new System.IO.DirectoryInfo(@path_log);
+            System.IO.DirectoryInfo[] dirs = info.GetDirectories();
+            string[] dir_list = {""};//создаем массив с живыми папками хостов
+            for (int i = 1; i < dirs.Length; i++)
+            {   Array.Resize(ref dir_list, dir_list.Length + 1);
+                dir_list[i] = dirs[i].Name;}
+            // тепереь перебираем хосты в конфиге, и если в дирлист
+            //есть что-то не входящее в конфиг добавляем его  
+            string name_now = "";
+            for (int j = 0; j < dt2.Rows.Count; j++)
+                name_now += dt2.Rows[j][0]+",";//создаем строку с перечислением имен
+            for (int i=0;i<dir_list.Length;i++)//если в строке нет имени, заносим в таблицу
+            if (name_now.IndexOf(dir_list[i]+",") < 0) dt2.Rows.Add(dir_list[i]);
+            writeCSV(dataGridView2, path_conf_file);//записываем новый конфиг
         }
-
         public void writeCSV(DataGridView gridIn, string outputFile)
         {
             //test to see if the DataGridView has any rows
