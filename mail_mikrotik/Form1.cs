@@ -16,6 +16,7 @@ public partial class Form1 : Form
         string path_log = @"E:\!email-mikrotik\";
         string path_log_out = @"E:\!email-mikrotik\!!!out\";
         string path_conf_file = @"E:\!email-mikrotik\!!!out\hosts.conf";
+        int debug_mail = 0;
         public Form1()
         {
             InitializeComponent();
@@ -37,12 +38,15 @@ public void move2path(string @name_old,string @path)
               { MessageBox.Show(ex.Message+Environment.NewLine); }
         }
 private void button1_Click(object sender, EventArgs e)
-        {         
+        {   
             string path_m = @"E:\!Source\Repos\mail_mikrotik\console_mail2dir\mail2dirr\mail2dirr\bin\Debug\mail2dirr.exe";
-            if(File.Exists(path_m)) //запускаем клиента получения вложений почты
+            string arg = @path_log;
+            if (debug_mail != 0)  @arg+= @" -debug";
+            label2.Text = arg;
+            if (File.Exists(path_m)) //запускаем клиента получения вложений почты
             { var startInfo = new System.Diagnostics.ProcessStartInfo
             { FileName = path_m,// + @" /dir "+@path_log,  // Путь к приложению
-            Arguments= @" /dir " + @path_log,
+            Arguments= @" /dir " + @arg,             
             UseShellExecute = false, CreateNoWindow = true};
             System.Diagnostics.Process.Start(startInfo);
                 // label2.Text = DateTime.Now.ToString()+"_OK";
@@ -110,6 +114,7 @@ private void button1_Click(object sender, EventArgs e)
                  #     NAME               RX-BYTE           TX-BYTE     RX-PACKET     TX-PACKET
                 фиксированная ширина поля 
                 2 6 14 34 52 66 80
+                1-2-10-18-18-14-14
                  *///
                 string[] readText = File.ReadAllLines(path_log+ files[i].Name);
                 for(int ii=0;ii<readText.Length;ii++)
@@ -287,6 +292,12 @@ private void button1_Click(object sender, EventArgs e)
             if (name_now.IndexOf(dir_list[i]+",") < 0) dt2.Rows.Add(dir_list[i]);
             writeCSV(dataGridView2, path_conf_file);//записываем новый конфиг
         }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked == true) debug_mail = 1;
+        }
+
         public void writeCSV(DataGridView gridIn, string outputFile)
         {
             //test to see if the DataGridView has any rows

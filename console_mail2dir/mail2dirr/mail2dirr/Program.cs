@@ -23,12 +23,12 @@ namespace mail2dirr
                 if (arg[i] == "/dir")
                     if (!String.IsNullOrEmpty(arg[i + 1]))
                         path = arg[i + 1];
-                if (arg[i] == "/debug") flag = 1;
+                if (arg[i] == "-debug") flag = 1;
 
                 if (arg[i] == "/?")
                 {
                     Console.WriteLine("");
-                    Console.WriteLine("Использование: mail2dirr.exe /dir \"папка для вложений\" [/debug] ");
+                    Console.WriteLine("Использование: mail2dirr.exe /dir \"папка для вложений\" [-debug] ");
 
                     return;
                 }
