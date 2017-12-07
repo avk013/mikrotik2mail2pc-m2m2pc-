@@ -240,7 +240,7 @@
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(408, 27);
             this.button8.TabIndex = 4;
-            this.button8.Text = "добавить в список новые хосты";
+            this.button8.Text = "сканировать структуру и добавить в список новые хосты";
             this.button8.UseVisualStyleBackColor = true;
             this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
@@ -250,7 +250,7 @@
             this.dataGridView2.AllowUserToDeleteRows = false;
             this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView2.ContextMenuStrip = this.contextMenuStrip1;
-            this.dataGridView2.Location = new System.Drawing.Point(3, 3);
+            this.dataGridView2.Location = new System.Drawing.Point(6, 3);
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.Size = new System.Drawing.Size(396, 199);
             this.dataGridView2.TabIndex = 3;
