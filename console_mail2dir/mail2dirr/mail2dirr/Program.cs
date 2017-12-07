@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Limilabs.Client.IMAP;
 using Limilabs.Client.POP3;
-using Limilabs.Client.SMTP;
 using Limilabs.Mail;
 using Limilabs.Mail.MIME;
-using Limilabs.Mail.Fluent;
-using Limilabs.Mail.Headers;
 using System.IO;
 using System.Runtime.InteropServices;
 
@@ -31,7 +23,7 @@ namespace mail2dirr
                 if (arg[i] == "/dir")
                     if (!String.IsNullOrEmpty(arg[i + 1]))
                         path = arg[i + 1];
-                if (arg[i] == "debig") flag = 1;
+                if (arg[i] == "/debug") flag = 1;
 
                 if (arg[i] == "/?")
                 {
@@ -50,9 +42,7 @@ namespace mail2dirr
                 try
                 {
                     pop3.Connect("pop.i.ua");       // or ConnectSSL for SSL
-                                                    //(e) { System.Windows.Forms.MessageBox.ShowDialog(e); }
                     pop3.UseBestLogin("udp404@i.ua", "dtnjxrfcbhtyb500");
-
                     foreach (string uid in pop3.GetAll())
                     {
                         IMail email = new MailBuilder()
@@ -63,29 +53,17 @@ namespace mail2dirr
                         filenam = email.Text.Replace("\r\n", "");
                         // email.Save(@"e:\1111qa");
                         foreach (MimeData mime in email.Attachments)
-                        {
-                            mime.Save(path + mime.SafeFileName);
-                            //   mime.Save(path + filenam+".txt");
-                        }
-                    }
+                        { mime.Save(path + mime.SafeFileName);}}
                     //удаляем сообщения с сервера
                     foreach (string uid in pop3.GetAll())
-                    {
-                        pop3.DeleteMessageByUID(uid);
-                    }
-
-                    pop3.Close();
-                }
+                    {pop3.DeleteMessageByUID(uid);}
+                     pop3.Close();}
                 catch (Exception e) {
                     if(flag!=0) MessageBox((IntPtr)0, e.ToString(), "mail_UDProgram_message", 0);
-                    path += "ok.ok";
-                    if (!File.Exists(path)) File.Create(path);
-                }
-            
-                } ;
+                    path += "ok.ok"; if (!File.Exists(path)) File.Create(path);
+                }}
             //ставим знак окончания приема писем
-            path += "ok.ok";
-            if (!File.Exists(path)) File.Create(path);
+            path += "ok.ok";if (!File.Exists(path)) File.Create(path);
         }
     }
 }
