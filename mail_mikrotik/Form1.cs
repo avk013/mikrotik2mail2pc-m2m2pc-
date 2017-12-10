@@ -17,6 +17,8 @@ public partial class Form1 : Form
         string path_log_out = @"E:\!email-mikrotik\!!!out\";
         string path_conf_file = @"E:\!email-mikrotik\!!!out\hosts.conf";
         int debug_mail = 0;
+        string zagruz = "загрузка................загрузка............", za;
+        int i = 0;
         public Form1()
         {
             InitializeComponent();
@@ -72,13 +74,13 @@ private void button1_Click(object sender, EventArgs e)
             int st = 0;
             //dt.Clear();
             //dt = new DataTable("tab0");
-            DataColumn a0 = new DataColumn(st++.ToString(), typeof(String));
-            DataColumn a1 = new DataColumn(st++.ToString(), typeof(String));
-            DataColumn a2 = new DataColumn(st++.ToString(), typeof(String));
-            DataColumn a3 = new DataColumn(st++.ToString(), typeof(String));
+            DataColumn a0 = new DataColumn("хост", typeof(String));
+            DataColumn a1 = new DataColumn("дата", typeof(String));
+            DataColumn a2 = new DataColumn("время", typeof(String));
+            DataColumn a3 = new DataColumn("аптайм", typeof(String));
             DataColumn a4 = new DataColumn(st++.ToString(), typeof(String));
-            DataColumn a5 = new DataColumn(st++.ToString(), typeof(String));
-            DataColumn a6 = new DataColumn(st++.ToString(), typeof(String));
+            DataColumn a5 = new DataColumn("получено(байт)", typeof(String));
+            DataColumn a6 = new DataColumn("отдано(байт)", typeof(String));
             // download_upload
             DataColumn a7 = new DataColumn(st++.ToString(), typeof(String));
             DataColumn a8 = new DataColumn(st++.ToString(), typeof(String));
@@ -96,7 +98,7 @@ private void button1_Click(object sender, EventArgs e)
                 textBox2.Text += files[i].Name + Environment.NewLine;
                 tab0Values = files[i].Name.Split('_');
                 dr = dt.NewRow();
-                for (int ii = 0; ii < 6; ii++) { dr[ii] = tab0Values[ii]; }
+                for (int ii = 0; ii < 5; ii++) { dr[ii] = tab0Values[ii]; }
                 //считываем содержимое файла              
                 /* формат файла
                  Flags: D - dynamic, X - disabled, R - running, S - slave 
@@ -116,19 +118,29 @@ private void button1_Click(object sender, EventArgs e)
                 2 6 14 34 52 66 80
                 1-2-10-18-18-14-14
                  *///
+                   // ищем номер интерфейса который ищем для этого файла
+                int nom_if = 0;                
+                for (int j = 0; j < dataGridView2.RowCount; j++)
+                {if (dr[0].ToString() == dataGridView2.Rows[j].Cells[0].Value.ToString())
+                    {nom_if = Convert.ToInt16(dataGridView2.Rows[j].Cells[1].Value);
+                     break;}}
+                //
                 string[] readText = File.ReadAllLines(path_log+ files[i].Name);
-                for(int ii=0;ii<readText.Length;ii++)
+                for (int ii = 0; ii < readText.Length; ii++)
                 {// ищем строку с номером интерфейса из конфига и считываем поле 34 и 52
-   //!!! no working
-                    int j;
-                 //   for (j = 0; j < dataGridView2.RowCount; j++)
-                   //     if ((dataGridView2.Rows[1].Cells[j].ToString() == readText[0])
-                     //       && (dataGridView2.Rows[1].Cells[j].ToString()==readText[0])
-                       //     ) dr[6] = dataGridView2.Rows[1].Cells[j].ToString().Substring(14,20);
-                  //  if (readText[ii].IndexOf("name:") >0) dr[6] = readText[ii];
-                  //if (readText[ii].IndexOf("driver-rx-byte:") > 0) dr[7] = readText[ii];
-                  //if (readText[ii].IndexOf("tx-bytes:") > 0) dr[8] = readText[ii];
-                 }
+                    string data = readText[ii];//объединяем 2 строчки если длина строки 15
+                    if (data.Length == 16) data += readText[ii + 1].Substring(16);
+                    if (data.Length >= 44) { 
+                    int number;
+                    bool isNumeric = int.TryParse(data.Substring(0, 2), out number);
+                    if (isNumeric)
+                    {
+                        int num_ifile = Convert.ToInt16(data.Substring(0, 2));
+                            if (num_ifile == nom_if)
+                            {   dr[5] = data.Substring(15, 18).Trim().Replace(" ","");
+                                dr[6] = data.Substring(35, 18).Trim().Replace(" ", "");
+                            }}}
+                }
                  dt.Rows.Add(dr);}
                  dataGridView1.DataSource = dt;
                  // подумать если пусто
@@ -153,12 +165,8 @@ private void button1_Click(object sender, EventArgs e)
             /////////////
         }}}
 
-                        private void button5_Click(object sender, EventArgs e)
-                        {
-                        }
-                        //string zagruz = "загрузка................загрузка............загрузка......",za;
-                        string zagruz = "загрузка................загрузка............", za;
-                        int i = 0;
+                     
+                     
 
                         private void timer2_Tick(object sender, EventArgs e)
                         {
@@ -266,7 +274,18 @@ private void button1_Click(object sender, EventArgs e)
 
         private void button7_Click(object sender, EventArgs e)
         {
-
+            int nom_if = 0;
+            string a = "mikro";
+            for (int j = 0; j < dataGridView2.RowCount; j++)
+            {
+                label5.Text += j.ToString();
+                if (a == dataGridView2.Rows[j].Cells[0].Value.ToString())
+                {
+                    nom_if = Convert.ToInt16(dataGridView2.Rows[j].Cells[1].Value);
+                    label5.Text = nom_if.ToString();
+                    break;
+                }
+            }
         }
 
         private void dataGridView2_CellEndEdit(object sender, DataGridViewCellEventArgs e)
