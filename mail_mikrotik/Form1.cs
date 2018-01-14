@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Xml;
 
 namespace mail_mikrotik
 {
@@ -129,16 +130,15 @@ private void button1_Click(object sender, EventArgs e)
                 for (int ii = 0; ii < readText.Length; ii++)
                 {// ищем строку с номером интерфейса из конфига и считываем поле 34 и 52
                     string data = readText[ii];//объединяем 2 строчки если длина строки 15
-                    if (data.Length == 16) data += readText[ii + 1].Substring(16);
+                    if (data.Length <=17 && data.Length > 10) data = data.Substring(0,15)+ readText[ii + 1].Substring(16);
                     if (data.Length >= 44) { 
                     int number;
                     bool isNumeric = int.TryParse(data.Substring(0, 2), out number);
                     if (isNumeric)
-                    {
-                        int num_ifile = Convert.ToInt16(data.Substring(0, 2));
+                    {       int num_ifile = Convert.ToInt16(data.Substring(0, 2));
                             if (num_ifile == nom_if)
                             {   dr[5] = data.Substring(15, 18).Trim().Replace(" ","");
-                                dr[6] = data.Substring(35, 18).Trim().Replace(" ", "");
+                                dr[6] = data.Substring(34, 18).Trim().Replace(" ", "");
                             }}}
                 }
                  dt.Rows.Add(dr);}
@@ -196,10 +196,8 @@ private void button1_Click(object sender, EventArgs e)
             a1.ColumnName = "интерфейс";
             DataColumn a2 = new DataColumn(st++.ToString(), typeof(String));         
             dt.Columns.AddRange(new DataColumn[] { a0, a1, a2});
-            string[] tab0Values = null;
             DataRow dr = null;
             //   не работает...
-
             for (int i = 1; i < dirs.Length; i++)
             {
                 //tab0Values[0] = dirs[i].Name;
@@ -208,16 +206,12 @@ private void button1_Click(object sender, EventArgs e)
                 //ищкем в конфиге это имя, и добавляем в таблицу параметр для него
                 // а е сли не пришло сообщения?!"?
                 //думем....
-
-
                 dt.Rows.Add(dr);
             }
            dataGridView2.DataSource = dt;
             writeCSV(dataGridView2, path_conf_file);
             // + Environment.NewLine;
-            // считываем файл !!!!!! пока не рабоает...
-            
-            
+            // считываем файл !!!!!! пока не рабоает...                      
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -274,16 +268,14 @@ private void button1_Click(object sender, EventArgs e)
 
         private void button7_Click(object sender, EventArgs e)
         {
-            int nom_if = 0;
-            string a = "mikro";
-            for (int j = 0; j < dataGridView2.RowCount; j++)
-            {
-                label5.Text += j.ToString();
-                if (a == dataGridView2.Rows[j].Cells[0].Value.ToString())
+            string[] readText = File.ReadAllLines(path_log + @"mik11\mik11_10-dec-2017_09-11_1d18_26_53.txt");
+            for (int ii = 0; ii < readText.Length; ii++)
+            {// ищем строку с номером интерфейса из конфига и считываем поле 34 и 52
+                string data = readText[ii];//объединяем 2 строчки если длина строки 15
+                if (data.Length == 15)
                 {
-                    nom_if = Convert.ToInt16(dataGridView2.Rows[j].Cells[1].Value);
-                    label5.Text = nom_if.ToString();
-                    break;
+                    data += readText[ii + 1].Substring(16);
+                    label5.Text+= data;
                 }
             }
         }
@@ -315,6 +307,52 @@ private void button1_Click(object sender, EventArgs e)
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBox1.Checked == true) debug_mail = 1;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {//обрабтка xml пока некрасиво, в один файл без промежуточного массива
+            dataGridView1.DataSource = null;
+            textBox2.Text = null;
+            System.IO.DirectoryInfo info = new System.IO.DirectoryInfo(@path_log+@"!!!out");
+            System.IO.FileInfo[] files = info.GetFiles("*.xml");
+            for (int i = 0; i < files.Length; i++)
+            { textBox2.Text += files[i].Name + Environment.NewLine;
+                ////// xml merge
+                XmlTextReader xmlreader1;
+                XmlTextReader xmlreader2;
+                DataSet ds = new DataSet();
+                DataSet ds2 = new DataSet();
+                string path_outxml = @path_log + @"!!!out\out\" + "out.xml";
+                try
+                {   xmlreader2 = new XmlTextReader(@path_log + @"!!!out\"+files[i].Name);
+                    //tab0Values = files[i].Name.Split('_');
+                    if (File.Exists(path_outxml)) { xmlreader1 = new XmlTextReader(path_outxml);                                            }
+                    else
+                    {ds.ReadXml(xmlreader2);ds.WriteXml(path_outxml);continue; }                        
+                    ds.ReadXml(xmlreader1); 
+                    ds2.ReadXml(xmlreader2);
+                    ds.Merge(ds2);
+                    xmlreader1.Close();
+                    xmlreader2.Close();
+                    ds.WriteXml(path_outxml);
+                }
+                catch (System.Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    //Console.Write(ex.Message);
+                }
+                
+                /////
+            }
+
+            }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            DataSet ds = new DataSet();
+            ds.ReadXml(@path_log + @"!!!out\out\" + "out.xml");
+            DataTable dt = ds.Tables[0];
+            dataGridView1.DataSource = dt;
         }
 
         public void writeCSV(DataGridView gridIn, string outputFile)

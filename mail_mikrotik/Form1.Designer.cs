@@ -39,6 +39,7 @@
             this.button2 = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.button4 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.listBox1 = new System.Windows.Forms.ListBox();
@@ -56,7 +57,7 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.timer2 = new System.Windows.Forms.Timer(this.components);
-            this.label5 = new System.Windows.Forms.Label();
+            this.button5 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -104,6 +105,7 @@
             this.tabPage1.Controls.Add(this.label3);
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.button3);
+            this.tabPage1.Controls.Add(this.button5);
             this.tabPage1.Controls.Add(this.button2);
             this.tabPage1.Controls.Add(this.button1);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
@@ -117,7 +119,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(155, 78);
+            this.label3.Location = new System.Drawing.Point(299, 41);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(103, 13);
             this.label3.TabIndex = 2;
@@ -148,13 +150,14 @@
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(143, 48);
             this.button2.TabIndex = 0;
-            this.button2.Text = "обработать логи";
+            this.button2.Text = "объединить данные промежутков";
             this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button1_Click);
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.label4);
+            this.tabPage2.Controls.Add(this.label5);
             this.tabPage2.Controls.Add(this.button4);
             this.tabPage2.Controls.Add(this.label1);
             this.tabPage2.Controls.Add(this.listBox1);
@@ -169,11 +172,20 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(150, 111);
+            this.label4.Location = new System.Drawing.Point(10, 219);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(35, 13);
             this.label4.TabIndex = 3;
             this.label4.Text = "label4";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(126, 56);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(35, 13);
+            this.label5.TabIndex = 4;
+            this.label5.Text = "label5";
             // 
             // button4
             // 
@@ -323,21 +335,21 @@
             this.timer2.Interval = 700;
             this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
             // 
-            // label5
+            // button5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(452, 31);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(35, 13);
-            this.label5.TabIndex = 4;
-            this.label5.Text = "label5";
+            this.button5.Location = new System.Drawing.Point(155, 60);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(143, 48);
+            this.button5.TabIndex = 0;
+            this.button5.Text = "разбить данные по месяцам";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(703, 421);
-            this.Controls.Add(this.label5);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.textBox2);
@@ -390,6 +402,7 @@
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Button button5;
     }
 }
 

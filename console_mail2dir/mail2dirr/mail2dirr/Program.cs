@@ -60,7 +60,7 @@ namespace mail2dirr
                      pop3.Close();}
                 catch (Exception e) {
                     if(flag!=0) MessageBox((IntPtr)0, e.ToString(), "mail_UDProgram_message", 0);
-                    path += "ok.ok"; if (!File.Exists(path)) File.Create(path);
+                    //path += "ok.ok"; if (!File.Exists(path)) File.Create(path);
                 }}
             //ставим знак окончания приема писем
             path += "ok.ok";if (!File.Exists(path)) File.Create(path);
