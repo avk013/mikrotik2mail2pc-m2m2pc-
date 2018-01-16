@@ -315,36 +315,44 @@ private void button1_Click(object sender, EventArgs e)
             textBox2.Text = null;
             System.IO.DirectoryInfo info = new System.IO.DirectoryInfo(@path_log+@"!!!out");
             System.IO.FileInfo[] files = info.GetFiles("*.xml");
+               XmlTextReader xmlreader1;
+                XmlTextReader xmlreader2;
+                DataSet ds = new DataSet();
+                
+                string path_outxml = @path_log + @"!!!out\out\" + "out.xml";
             for (int i = 0; i < files.Length; i++)
             { textBox2.Text += files[i].Name + Environment.NewLine;
                 ////// xml merge
-                XmlTextReader xmlreader1;
-                XmlTextReader xmlreader2;
-                DataSet ds = new DataSet();
-                DataSet ds2 = new DataSet();
-                string path_outxml = @path_log + @"!!!out\out\" + "out.xml";
+ DataSet ds2 = new DataSet();
                 try
                 {   xmlreader2 = new XmlTextReader(@path_log + @"!!!out\"+files[i].Name);
                     //tab0Values = files[i].Name.Split('_');
-                    if (File.Exists(path_outxml)) { xmlreader1 = new XmlTextReader(path_outxml);                                            }
+                    if (File.Exists(path_outxml)) {
+                        if (ds==null)
+                        {
+                            xmlreader1 = new XmlTextReader(path_outxml);
+                            ds.ReadXml(xmlreader1);
+                        }
+                    }
                     else
-                    {ds.ReadXml(xmlreader2);ds.WriteXml(path_outxml);continue; }                        
-                    ds.ReadXml(xmlreader1); 
+                    {ds.ReadXml(xmlreader2);ds.WriteXml(path_outxml); MessageBox.Show("новый оут"); continue; }                        
+                    
                     ds2.ReadXml(xmlreader2);
                     ds.Merge(ds2);
-                    xmlreader1.Close();
-                    xmlreader2.Close();
-                    ds.WriteXml(path_outxml);
+                  //  xmlreader1.Close();
+                    xmlreader2.Close(); ds2 = null;
+                    
                 }
                 catch (System.Exception ex)
                 {
                     MessageBox.Show(ex.Message);
                     //Console.Write(ex.Message);
                 }
-                
+               
                 /////
             }
-
+ ds.WriteXml(path_outxml);
+            ds = null;
             }
 
         private void button5_Click(object sender, EventArgs e)
