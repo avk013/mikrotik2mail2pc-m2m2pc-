@@ -130,7 +130,8 @@ private void button1_Click(object sender, EventArgs e)
                 for (int ii = 0; ii < readText.Length; ii++)
                 {// ищем строку с номером интерфейса из конфига и считываем поле 34 и 52
                     string data = readText[ii];//объединяем 2 строчки если длина строки 15
-                    if (data.Length <=17 && data.Length > 10) data = data.Substring(0,15)+ readText[ii + 1].Substring(16);
+                    //if (data.Length <=17 && data.Length > 10) data = data.Substring(0,15)+ readText[ii + 1].Substring(16);
+                    if (data.Length <= 64 && data.Length > 10) data = data.Substring(0, 15) + readText[ii + 1].Substring(16);
                     if (data.Length >= 44) { 
                     int number;
                     bool isNumeric = int.TryParse(data.Substring(0, 2), out number);
